@@ -84,15 +84,18 @@ public:
 			INS_CMP = 0x54, // To compare a value from a register to another CC 3 3 byte
 
 			// 0x60 is used by the program loader for changing memory location when writing to memory
-			// Interrupt Instruction starts from 0x61
+                        // Interrupt based instructions starts from 0x61
 			INS_INT = 0x61, // To use interrupts in the cpu
 			INS_CLI = 0x62, // To clear interrupt flag
 			INS_STI = 0x63, // To set interrupt flag
 
+                        // Miscellaneous instructions
 			INS_NOP = 0x64, // No Opcodes
-			INS_HLT = 0x65, // Halt the processor
-			INS_NDE = 0x66, // Stop debug
-			INS_SDE = 0x67; // Start debug
+			INS_HLT = 0x65, // Halts the processor
+                        // Debugging mode is used for debugging purposes. In this mode the instructions and it's opcode along with the register data and program counter [memory address] will be printed on to the console
+			INS_SDE = 0x67; // Starts debugging
+			INS_NDE = 0x66, // Stops debugging
+
 
 
 		/*					### END INSTRUCTION SET ###				*/
