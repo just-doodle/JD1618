@@ -3,6 +3,7 @@ DEBUG=gdb
 COMPILER_OPTIONS=-lstdc++ -x c++
 DEBUG_COMPILER_BUILD_OPTIONS=-lstdc++ -x c++ -g
 FILES=EMU/main.cpp EMU/CPU1618.cpp
+.RECIPEPREFIX= 
 
 Build/JD1618: $(FILES)
 	mkdir -pv Build
