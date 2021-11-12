@@ -23,4 +23,17 @@ run: Build/JD1618
 
 clean:
 	rm -rf Build
+
+install: Build/JD1618
+        sudo install Build/JD1618 /usr/bin/
+
+Cross_Compile_AArch64:
+        sudo apt install docker
+        docker pull dockcross/android-arm64
+        docker run --rm dockcross/android-arm64 > ./dockcross
+        chmod +x ./dockcross
+        mv ./dockcross ~/bin/
+        git clone https://github.com/dockcross/dockcross.git
+        dockcross bash -c 'mkdir -pv Build && $(COMP) -o Build/JD1618 $(FILES) $(COMPILER_OPTIONS) && cp Test.rom Build'
+
  
