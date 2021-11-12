@@ -31,9 +31,8 @@ Cross_Compile_AArch64:
         sudo apt install docker
         docker pull dockcross/android-arm64
         docker run --rm dockcross/android-arm64 > ./dockcross
-        chmod +x ./dockcross
-        mv ./dockcross ~/bin/
-        git clone https://github.com/dockcross/dockcross.git
+        sudo chmod +x ./dockcross
+        sudo mv ./dockcross /bin/
         dockcross bash -c 'mkdir -pv Build && $(COMP) -o Build/JD1618 $(FILES) $(COMPILER_OPTIONS) && cp Test.rom Build'
 
  
