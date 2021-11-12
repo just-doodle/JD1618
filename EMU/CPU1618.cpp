@@ -511,7 +511,9 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 					{
                                                 #ifdef __linux__
 						system("clear");
+                                                #pragma message ( "OS is linux" )
                                                 #else
+                                                #pragma message ( "OS 8s not linux" )
                                                 system("cls");
                                                 #endif
 					}break;
