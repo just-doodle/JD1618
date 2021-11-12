@@ -7,6 +7,7 @@ FILES=EMU/main.cpp EMU/CPU1618.cpp
 Build/JD1618: $(FILES)
 	mkdir -pv Build
 	$(COMP) -o $@ $(FILES) $(COMPILER_OPTIONS)
+        cp Test.rom Build
 
 DebugBuild: $(FILES)
 	mkdir -pv Build/Debug
