@@ -111,7 +111,7 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 		{
 		case INS_MV:
 		{
-			insname = (char*)"MV";
+			insname = (char*)"MOV";
 			uint8_t destination = FetchByte(ClockCycles, mem);
 			uint8_t source = FetchByte(ClockCycles, mem);
 
@@ -473,7 +473,8 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 		case 0x00:
 		{
 			std::cout << "The instruction in memory address 0x" << hex(PC) << " cannot be executed because it is zero\n";
-			isFaulted = true;
+                        insname = (char*)"ZOP";
+			//isFaulted = true;
 		}break;
 		case INS_INT:
 		{
@@ -508,7 +509,11 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 					}break;
 					case INT_CLS:
 					{
+                                                #ifdef __linux__
 						system("clear");
+                                                #else
+                                                system("cls");
+                                                #endif
 					}break;
 				}
 			}
@@ -525,7 +530,8 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 		}break;
 		case INS_NOP:
 		{
-			isFaulted = true;
+                        insname = (char*)"NOP";
+			//isFaulted = true;
 		}break;
 		case INS_HLT:
 		{
@@ -547,7 +553,7 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 		default:
 		{
 			std::cout << "The instruction 0x" << hex(INSTRUCTION) << " is not implemented.\n";
-			isFaulted = true;
+			insname = (char*)"IOC";
 		}break;
 		}
 		if (!isFaulted)
