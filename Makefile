@@ -25,5 +25,5 @@ clean:
 	rm -rf Build
 
 Install: Build/JD1618
- sudo install Build/JD1618 /usr/bin
+        sudo install Build/JD1618 /usr/bin
  
