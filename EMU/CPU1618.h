@@ -101,8 +101,8 @@ public:
 			INS_NOP = 0x64, // No Opcodes
 			INS_HLT = 0x65, // Halts the processor
                         // Debugging mode is used for debugging purposes. In this mode the instructions and it's opcode along with the register data and program counter [memory address] will be printed on to the console
-			INS_SDE = 0x67; // Starts debugging
-			INS_NDE = 0x66, // Stops debugging
+			INS_SDE = 0x67, // Starts debugging
+			INS_NDE = 0x66; // Stops debugging
 
 
 
