@@ -35,7 +35,7 @@ Cross_Compile_AArch64:
     gnupg \
     lsb-release
 ^curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-^sudo add-apt-repository "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable"
+^sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable"
 ^sudo apt-get update
 ^sudo apt-get install docker-ce docker-ce-cli containerd.io
 ^docker pull dockcross/android-arm64
