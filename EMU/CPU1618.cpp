@@ -139,7 +139,10 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 				}
 				else
 				{
-					A = mem.RAM[source];
+					if (OF == 0x00)
+						A = mem.RAM[source];
+					else
+						A = mem.RAM[source * OF];
 				}
 			}
 			else if (destination == 0x02)
@@ -166,7 +169,10 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 				}
 				else
 				{
-					X = mem.RAM[source];
+					if (OF == 0x00)
+						X = mem.RAM[source];
+					else
+						X = mem.RAM[source * OF];
 				}
 			}
 			else if (destination == 0x03)
@@ -193,7 +199,10 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 				}
 				else
 				{
-					Y = mem.RAM[source];
+					if (OF == 0x00)
+						Y = mem.RAM[source];
+					else
+						Y = mem.RAM[source * OF];
 				}
 			}
 			else if (destination == 0x04)
@@ -220,22 +229,68 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 				}
 				else
 				{
-					Q = mem.RAM[source];
+					if (OF == 0x00)
+						Q = mem.RAM[source];
+					else
+						Q = mem.RAM[source * OF];
+				}
+			}
+			else if (destination == 0x05)
+			{
+				if (source == 0x01)
+				{
+					OF = A;
+					A = 0;
+				}
+				else if (source == 0x02)
+				{
+					OF = X;
+					X = 0;
+				}
+				else if (source == 0x03)
+				{
+					OF = Y;
+					Y = 0;
+				}
+				else if (source == 0x04)
+				{
+					OF = Q;
+					Q = 0;
+				}
+				else
+				{
+					OF = mem.RAM[source];
 				}
 			}
 			else
 			{
 				if (source == 0x01)
 				{
-					mem.RAM[destination] = A;
+					if (OF == 0x00)
+						mem.RAM[destination] = A;
+					else
+						mem.RAM[destination * OF] = A;
 				}
 				else if (source == 0x02)
 				{
-					mem.RAM[destination] = X;
+					if (OF == 0x00)
+						mem.RAM[destination] = X;
+					else
+						mem.RAM[destination * OF] = X;
 				}
 				else if (source == 0x03)
 				{
-					mem.RAM[destination] = Y;
+					if (OF == 0x00)
+						mem.RAM[destination] = Y;
+					else
+						mem.RAM[destination * OF] = Y;
+				}
+				else if (source == 0x04)
+				{
+					if (OF == 0x00)
+						mem.RAM[destination] = Q;
+					else
+						mem.RAM[destination * OF] = Q;
 				}
 				else
 				{
@@ -248,7 +303,10 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 		{
 			insname = (char*)"JMP";
 			ADDRESS = FetchByte(ClockCycles, mem);
-			PC = ADDRESS;
+			if (OF == 0x00)
+				PC = ADDRESS;
+			else
+				PC = ADDRESS * OF;
 			ClockCycles--;
 		}break;
 		case INS_JZ:
@@ -256,7 +314,12 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 			insname = (char*)"JZ";
 			ADDRESS = FetchByte(ClockCycles, mem);
 			if (Z == 1)
-				PC = ADDRESS;
+			{
+				if (OF == 0x00)
+					PC = ADDRESS;
+				else
+					PC = ADDRESS * OF;
+			}
 			ClockCycles--;
 		}break;
 		case INS_JNZ:
@@ -264,7 +327,12 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 			insname = (char*)"JNZ";
 			ADDRESS = FetchByte(ClockCycles, mem);
 			if (Z == 0)
-				PC = ADDRESS;
+			{
+				if (OF == 0x00)
+					PC = ADDRESS;
+				else
+					PC = ADDRESS * OF;
+			}
 			ClockCycles--;
 		}
 		break;
@@ -273,7 +341,12 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 			insname = (char*)"JE";
 			ADDRESS = FetchByte(ClockCycles, mem);
 			if (E == 1)
-				PC = ADDRESS;
+			{
+				if (OF == 0x00)
+					PC = ADDRESS;
+				else
+					PC = ADDRESS * OF;
+			}
 			ClockCycles--;
 		}break;
 		case INS_JNE:
@@ -281,7 +354,12 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 			insname = (char*)"JNE";
 			ADDRESS = FetchByte(ClockCycles, mem);
 			if (E == 0)
-				PC = ADDRESS;
+			{
+				if (OF == 0x00)
+					PC = ADDRESS;
+				else
+					PC = ADDRESS * OF;
+			}
 			ClockCycles--;
 		}break;
 		case INS_DEC:
@@ -501,7 +579,15 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 					}break;
 					case INT_SRP:
 					{
-						std::cout << "status registers :\n" << "C = " << C << "\n" << "E = " << E << "\n" << "Z = " << Z << "\n" << "I = " << I << "\n" << "D = " << D << "\n" << "B = " << B << "\n" << "V = " << V << "\n" << "N = " << N << "\n";
+						std::cout << "status registers :\n"
+								  << "C = " << (C ? "1" : "0") << "\n"
+								  << "E = " << (E ? "1" : "0") << "\n"
+								  << "Z = " << (Z ? "1" : "0") << "\n"
+								  << "I = " << (I ? "1" : "0") << "\n"
+								  << "D = " << (D ? "1" : "0") << "\n"
+								  << "B = " << (B ? "1" : "0") << "\n"
+								  << "V = " << (V ? "1" : "0") << "\n"
+								  << "N = " << (N ? "1" : "0") << "\n";
 					}break;
 					case INT_GKP:
 					{
@@ -509,13 +595,13 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 					}break;
 					case INT_CLS:
 					{
-                                                #ifdef __linux__
+                        #ifdef __linux__
 						system("clear");
-                                                #pragma message ( "OS is linux" )
-                                                #else
-                                                #pragma message ( "OS 8s not linux" )
-                                                system("cls");
-                                                #endif
+                        #pragma message ( "OS is linux" )
+                        #else
+                        #pragma message ( "OS is not linux" )
+                        system("cls");
+                        #endif
 					}break;
 				}
 			}
@@ -532,7 +618,7 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 		}break;
 		case INS_NOP:
 		{
-                        insname = (char*)"NOP";
+            insname = (char*)"NOP";
 			//isFaulted = true;
 		}break;
 		case INS_HLT:
@@ -572,6 +658,7 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 			std::cout << "Register X = 0x" << hex(X) << "\n";
 			std::cout << "Register Y = 0x" << hex(Y) << "\n";
 			std::cout << "Register Q = 0x" << hex(Q) << "\n";
+			std::cout << "Offset Register = 0x" << hex(OF) << "\n";
 			std::cout << "Register PC = 0x" << hex(PC1) << hex(PC2) << "\n";
 		}
 
@@ -643,15 +730,27 @@ void CPU1618::System::memme(int i, Memory& mem, char ex1[], char ex2[], char ex3
 			{
 				if (ins1[0] == 0x60)
 				{
-					maddr = ins2[0];
+					if (ins3[0] == 0x00)
+					{
+						maddr = ins2[0];
+						std::cout << "maddr = 0x" << hex(maddr) << "\n";
+					}
+					else
+					{
+						maddr = (ins2[0] * ins3[0]);
+						std::cout << "maddr1 = 0x" << hex(maddr) << "\n";
+					}
+					
 				}
-				FRAM[fp] = ins1[0];
-				fp++;
-				if (ins1[0] != 0x60)
+				else if (ins1[0] != 0x60)
 				{
 					mem.RAM[maddr] = ins1[0];
 					maddr++;
+					std::cout << "INS1 0x" << hex(maddr) << " = 0x" << hex(ins1[0]) << "\n";
 				}
+
+				FRAM[fp] = ins1[0];
+				fp++;
 			}
 		}break;
 		case 1:
@@ -663,6 +762,7 @@ void CPU1618::System::memme(int i, Memory& mem, char ex1[], char ex2[], char ex3
 				if (ins1[0] != 0x60)
 				{
 					mem.RAM[maddr] = ins2[0];
+					std::cout << "INS2 0x" << hex(maddr) << " = 0x" << hex(ins2[0]) << "\n";
 					maddr++;
 				}
 			}
@@ -673,8 +773,12 @@ void CPU1618::System::memme(int i, Memory& mem, char ex1[], char ex2[], char ex3
 			{
 				FRAM[fp] = ins3[0];
 				fp++;
-				mem.RAM[maddr] = ins3[0];
-				maddr++;
+				if (ins1[0] != 0x60)
+				{
+					mem.RAM[maddr] = ins3[0];
+					std::cout << "INS3 0x" << hex(maddr) << " = 0x" << hex(ins3[0]) << "\n";
+					maddr++;
+				}
 			}
 		}break;
 	}

@@ -11,8 +11,13 @@
 #include <stdlib.h>
 #include <iostream>
 
-int main()
+int main(int argc, char *argv[])
 {
+	if (argc != 2)
+	{
+		std::cout << "Usage: " << argv[0] << " <file>" << std::endl;
+		return 1;
+	}
 	CPU1618::Memory mem;
 	CPU1618::CPU cpu;
 	cpu.ResetCPU(mem);
@@ -51,20 +56,22 @@ int main()
 			mem.RAM[0x96] = 0x00;
 			*/
 			CPU1618::System s;
+			std::cout << argv[1] << std::endl;
 			if (!inDebug)
 			{
 				std::cout << "Enter the name of the file you want to load :- ";
 				const size_t BUFFER_SIZE = 1024;
 				char fn[BUFFER_SIZE] = {0};
-				std::cin >> fn;
-				if (fn != "DEBUG")
+				if (strcmp(argv[1], "") != 0)
 				{
-					s.LoadFiletoMemory(fn, mem);
+					s.LoadFiletoMemory(argv[1], mem);
+					std::cout << "ROM " << argv[1] << " loaded\n";
 				}
 				else
 				{
-					s.LoadFiletoMemory("Text.rom", mem);
+					std::cin >> fn;
 				}
+
 				std::cout << "ROM " << fn << " loaded\n";
 			}
 			else
