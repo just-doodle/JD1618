@@ -235,7 +235,7 @@ void CPU1618::CPU::ExecuteFromMemory(Memory& mem)
 						Q = mem.RAM[source * OF];
 				}
 			}
-			else if (destination == 0x05)
+			else if (destination == 0x06)
 			{
 				if (source == 0x01)
 				{
